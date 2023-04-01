@@ -1,24 +1,31 @@
 const asyncHandler = require("express-async-handler");
+const Contact = require("../models/contactModel");
 
 //@desc Get all contacts
 //@route GET /api/contacts
 //@access public
 const getContacts = asyncHandler(async (req,res) =>{
-    res.status(200).json({message:"Get all contatcs"})
+    const contacts = await Contact.find();
+    res.status(200).json(contacts)
 });
-
 
 //@desc Create new contact
 //@route POST /api/contacts
 //@access public
 const CreateContact = asyncHandler(async (req,res)=>{
     console.log("The requets body is : ",req.body);
-    const {name,email,contact} = req.body;
-    if(!name || !email || !contact){
-        res.status(400)
-        throw new Error("All fields are mandotory")
+    const {name,email,phone} = req.body;
+    if(!name || !email || !phone){
+        res.status(400);
+        throw new Error("All fields are mandotory");
     }
-    res.status(200).json({massage:"Create all contacts"})
+    const contact = await Contact.create({
+        name,
+        email,
+        phone,
+
+    });
+    res.status(201).json(contact)
 });
 
 //@desc get new contact
